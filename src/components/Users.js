@@ -1,17 +1,23 @@
-import React from 'react'
+import React,{useState} from 'react'
 import {useQuery} from 'react-query';
 
-const fetchUsers = async () =>{
-    const response=await fetch('http://jsonplaceholder.typicode.com/users/');
-    return response.json();
-    
+const url=`http://swapi.dev/api/planets/?page=`;
+const fetchUsers = async (key,page) =>{
+    const response=await fetch(url+page);
+    return response.json();  
+   
 }
-const Users =()=> {
-    const {data,status}=useQuery('users',fetchUsers);
-    console.log(data);
+const Users = () => {
+    const [page,setPage]=useState(1);
+    const {data,status}=useQuery(['users', page],fetchUsers);
+    console.log(data)
     return (
         <div>
             <h1>Users</h1>
+            <button onClick={()=>setPage(1)}>1</button>
+            <button onClick={()=>setPage(2)}>2</button>
+            <button onClick={()=>setPage(3)}>3</button>
+        
             {
                 status==='error'&&(
                     alert("Data Fetching Unsuccessful")
@@ -20,11 +26,11 @@ const Users =()=> {
             {
                 status==='success'&&(
                     <div>
-                        {data.map(user=><div><h2>{user.name}</h2>
-                        <h4>{user.username}</h4>
-                        <p>{user.email}</p>
-                        <p>{user.address.city}</p>
-                        </div>)}
+                        {/* {data.results.map(user=><div>
+                        <h2>{user.name}</h2>
+                        <h4>{user.birth_year}</h4>
+                        <p>{user.height}</p>
+                        </div>)} */}
                     </div>
                 )
             }
